@@ -35,6 +35,15 @@ public class TreeSelect implements Serializable {
      */
     public boolean life;
 
+    public Integer getChild() {
+        return child;
+    }
+
+    public void setChild(Integer child) {
+        this.child = child;
+    }
+
+    public Integer child;
     /**
      * 子节点
      */
@@ -49,7 +58,8 @@ public class TreeSelect implements Serializable {
         this.id = dept.getDeptId();
         this.label = dept.getDeptName();
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-        this.life = isLife();
+        this.life = dept.isHas();
+        this.child=dept.getHasChild();
     }
 
     public TreeSelect(SysMenu menu) {

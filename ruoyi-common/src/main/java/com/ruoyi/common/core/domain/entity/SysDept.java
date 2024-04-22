@@ -9,10 +9,11 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 部门表 sys_dept
- * 
+ *
  * @author ruoyi
  */
 public class SysDept extends BaseEntity
@@ -34,6 +35,9 @@ public class SysDept extends BaseEntity
     /** 显示顺序 */
     private Integer orderNum;
 
+    /** 是否有子部门*/
+    public Integer hasChild;
+
     /** 负责人 */
     private String leader;
 
@@ -51,7 +55,7 @@ public class SysDept extends BaseEntity
 
     /** 父部门名称 */
     private String parentName;
-    
+
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
@@ -64,6 +68,14 @@ public class SysDept extends BaseEntity
 
     public void setHas(boolean has) {
         this.has = has;
+    }
+
+    public Integer getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Integer hasChild) {
+        this.hasChild = hasChild;
     }
 
     public Long getDeptId()
@@ -210,6 +222,7 @@ public class SysDept extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("has",isHas())
+            .append("hasChild",getHasChild())
             .toString();
     }
 }

@@ -89,7 +89,7 @@ public interface ISysDeptService
      * @param deptId 部门ID
      * @return 结果
      */
-    public boolean hasChild(Long deptId,TreeSelect tree);
+    public boolean hasChilds(Long deptId,SysDept dept);
 
     /**
      * 查询部门是否存在用户
@@ -168,4 +168,6 @@ public interface ISysDeptService
      * @return 结果
      */
     public int deleteDeptByIds(List<Long> deptIds);
+
+
 }

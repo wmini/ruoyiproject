@@ -105,6 +105,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts) {
         List<SysDept> deptTrees = buildDeptTree(depts);
+        deptTrees.stream().forEach(d -> d.setHas(hasChilds(d.getDeptId(), d)));
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -154,17 +155,19 @@ public class SysDeptServiceImpl implements ISysDeptService {
         return result > 0;
     }
 
+
     /**
      * 是否存在部门子节点
      *
      * @param deptId 部门ID
      * @return 结果
      */
-    public boolean hasChild(Long deptId,TreeSelect tree){
+    public boolean hasChilds(Long deptId, SysDept dept) {
         int result = deptMapper.hasChildByDeptId(deptId);
-        boolean hasChild = result > 0;
-        tree.setLife(hasChild);
-        return hasChild;
+        boolean hasChilds = result > 0;
+        // 根据查询结果设置has属性
+        dept.setHas(hasChilds);
+        return hasChilds;
     }
 
     /**
@@ -274,8 +277,20 @@ public class SysDeptServiceImpl implements ISysDeptService {
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
             throw new ServiceException("部门停用，不允许新增");
         }
+
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
-        return deptMapper.insertDept(dept);
+        // 调用插入操作
+        int result = deptMapper.insertDept(dept);
+
+        // 如果父部门存在，则更新父部门的 has_child 字段
+        if (dept.getParentId() != null && dept.getParentId() != 0) {
+            deptMapper.updateParentDeptHasChild(dept);
+        }
+
+        // 返回插入操作结果
+        return result;
+
+//        return deptMapper.insertDept(dept);
     }
 
     /**
@@ -350,8 +365,14 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public int deleteDeptByIds(List<Long> deptIds) {
+        for (Long deptId : deptIds) {
+            // 直接更新传入的部门ID列表
+            deptMapper.updateParentDeptHasChilds(deptId);
+        }
+        // 执行删除操作
         return deptMapper.deleteDeptByIds(deptIds);
     }
+
 
     /**
      * 递归列表

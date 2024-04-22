@@ -101,6 +101,8 @@ public interface SysDeptMapper
      */
     public int insertDept(SysDept dept);
 
+    public int updateParentDeptHasChild(SysDept dept);
+
     /**
      * 修改部门信息
      * 
@@ -139,6 +141,12 @@ public interface SysDeptMapper
      * @return 结果
      */
     public int deleteDeptByIds(@Param("deptIds") List<Long> deptIds);
+
+    public int updateParentDeptHasChilds(Long deptId);
+
+    // 在 SysDeptMapper 接口中添加一个方法用于递归查询祖先部门的部门ID列表
+    List<String> selectAncestorDeptIds(Long deptId);
+
 
     /**
      * 获取子部门
