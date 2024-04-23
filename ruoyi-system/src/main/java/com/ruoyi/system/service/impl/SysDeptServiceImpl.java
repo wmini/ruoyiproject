@@ -366,8 +366,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     public int deleteDeptByIds(List<Long> deptIds) {
         for (Long deptId : deptIds) {
+            SysDept dept = deptMapper.selectDeptById(deptId);
             // 直接更新传入的部门ID列表
-            deptMapper.updateParentDeptHasChilds(deptId);
+            deptMapper.updateParentDeptHasChilds(dept.getAncestors());
         }
         // 执行删除操作
         return deptMapper.deleteDeptByIds(deptIds);

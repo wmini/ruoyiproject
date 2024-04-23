@@ -33,17 +33,9 @@ public class TreeSelect implements Serializable {
     /**
      * 是否存在子部门
      */
-    public boolean life;
+    public boolean leaf;
 
-    public Integer getChild() {
-        return child;
-    }
-
-    public void setChild(Integer child) {
-        this.child = child;
-    }
-
-    public Integer child;
+    private Integer child;
     /**
      * 子节点
      */
@@ -58,7 +50,7 @@ public class TreeSelect implements Serializable {
         this.id = dept.getDeptId();
         this.label = dept.getDeptName();
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-        this.life = dept.isHas();
+        this.leaf = dept.isHas();
         this.child=dept.getHasChild();
     }
 
@@ -68,12 +60,20 @@ public class TreeSelect implements Serializable {
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public boolean isLife() {
-        return life;
+    public Integer getChild() {
+        return child;
     }
 
-    public void setLife(boolean life) {
-        this.life = life;
+    public void setChild(Integer child) {
+        this.child = child;
+    }
+
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(boolean life) {
+        this.leaf = leaf;
     }
 
     public Long getId() {

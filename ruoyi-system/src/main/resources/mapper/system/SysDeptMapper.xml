@@ -20,10 +20,11 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="hasChild" column="has_child"/>
     </resultMap>
 
     <sql id="selectDeptVo">
-        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time
+        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time, d.has_child
         from sys_dept d
     </sql>
 
@@ -201,21 +202,16 @@
     </delete>
 
     <delete id="deleteDeptByIds" parameterType="Long">
-        update sys_dept set del_flag = '2'  where dept_id in
+        update sys_dept set del_flag = '2' ,has_child = '0' where dept_id in
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
     </delete>
 
-    <update id="updateParentDeptHasChilds" parameterType="Long">
+    <update id="updateParentDeptHasChilds">
         <!-- 更新被删除部门的所有祖先部门的 has_child 字段 -->
-        <![CDATA[
             update sys_dept set has_child = has_child - 1
-            where dept_id in (
-                select dept_id from sys_dept
-                where find_in_set(dept_id, #{ancestors}) and dept_id != 0
-        )
-        ]]>
+            where dept_id in (${ancestors})
     </update>
 
     <select id="selectAncestorDeptIds" parameterType="Long" resultType="String" >

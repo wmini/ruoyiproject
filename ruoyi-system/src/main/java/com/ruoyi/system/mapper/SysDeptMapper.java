@@ -142,7 +142,7 @@ public interface SysDeptMapper
      */
     public int deleteDeptByIds(@Param("deptIds") List<Long> deptIds);
 
-    public int updateParentDeptHasChilds(Long deptId);
+    public int updateParentDeptHasChilds(String ancestors);
 
     // 在 SysDeptMapper 接口中添加一个方法用于递归查询祖先部门的部门ID列表
     List<String> selectAncestorDeptIds(Long deptId);
